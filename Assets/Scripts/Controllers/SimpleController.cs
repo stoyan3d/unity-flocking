@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.EventSystems;
 
+[RequireComponent(typeof(AudioSource))]
 public class SimpleController : MonoBehaviour
 {
 
@@ -17,6 +18,14 @@ public class SimpleController : MonoBehaviour
     public float cohesionWeight = 1f;
     public float cohesionDistance = 25f;
     public float turnSpeed = 3f;
+
+    public AudioClip clickSound;
+    public AudioClip placeBoidSound;
+    public AudioClip placeObstacleSound;
+    private AudioSource source;
+
+    public GameObject placeVFX;
+    public GameObject placeObstacleVFX;
 
     public enum BuildMode { Boid, Obstacle }
     BuildMode buildMode;
@@ -35,8 +44,7 @@ public class SimpleController : MonoBehaviour
     GameObject boidsGo;
     GameObject obstalcesGo;
 
-    PlayerController char1;
-    PlayerController char2;
+    bool initialized = false;
 
     // Use this for initialization
     void Awake()
@@ -50,6 +58,7 @@ public class SimpleController : MonoBehaviour
         obstacles = new List<Obstacle>();
         boidGameObjectMap = new Dictionary<Boid, GameObject>();
         obstacleGameObjectMap = new Dictionary<Obstacle, GameObject>();
+        source = GetComponent<AudioSource>();
 
         // Create parent objects for the boids and obstalces
         boidsGo = new GameObject("Boids");
@@ -63,12 +72,10 @@ public class SimpleController : MonoBehaviour
             AddBoid(new Boid(Vector3.zero));
         }
 
-        // Add walls
-        //SetupTestWorld();
+        // Add an obstacle
+        AddObstacle(new Obstacle(new Vector3(width/2, 0, height/2)));
 
-        //Add cahracters
-        //char1 = new PlayerController("1");
-        //char2 = new PlayerController("2");
+        initialized = true;
     }
 
     // Update is called once per frame
@@ -94,9 +101,7 @@ public class SimpleController : MonoBehaviour
             }
         }
 
-        // Set build mode using keys
-
-
+        // Set build mode
         if (Input.GetMouseButtonUp(0) && !EventSystem.current.IsPointerOverGameObject())
         {
             switch (buildMode)
@@ -111,34 +116,55 @@ public class SimpleController : MonoBehaviour
                     break;
             }
         }
-
-        //char1.Run();
-        //char2.Run();
     }
 
     public void AddBoid(Boid b)
     {
+        if (initialized)
+        {
+            source.clip = placeBoidSound;
+            source.Play();
+
+            GameObject go;
+            go = SimplePool.Spawn(placeVFX, b.position, placeVFX.transform.rotation);
+            go.transform.SetParent(gameObject.transform);
+        }
+
         boidGameObjectMap[b] = Instantiate(boidPrefab);
         boidGameObjectMap[b].transform.SetParent(boidsGo.transform);
         boids.Add(b);
     }
 
-    public GameObject AddObstacle(Obstacle o)
+    public void AddObstacle(Obstacle o)
     {
+        if (initialized)
+        {
+            source.clip = placeObstacleSound;
+            source.Play();
+
+            GameObject go;
+            go = SimplePool.Spawn(placeObstacleVFX, o.position, placeObstacleVFX.transform.rotation);
+            go.transform.SetParent(gameObject.transform);
+        }
+
         obstacleGameObjectMap[o] = Instantiate(obstaclePrefab);
         obstacleGameObjectMap[o].transform.SetParent(obstalcesGo.transform);
         obstacles.Add(o);
-
-        return obstacleGameObjectMap[o];
     }
 
     public void SetBoidMode()
     {
+        source.clip = clickSound;
+        source.Play();
+
         buildMode = BuildMode.Boid;
     }
 
     public void SetObstacleMode()
     {
+        source.clip = clickSound;
+        source.Play();
+
         buildMode = BuildMode.Obstacle;
     }
 
@@ -149,39 +175,5 @@ public class SimpleController : MonoBehaviour
         Plane groundPlane = new Plane(Vector3.up, 0);
         groundPlane.Raycast(ray, out d);
         return ray.GetPoint(d);
-    }
-
-    public void SetupTestWorld()
-    {
-        
-        int cageWidth = 30;
-        int cageHeight = 30;
-        int openingSize = 8;
-
-        for (int x = -cageWidth / 2; x <= cageWidth / 2; x++)
-        {
-            // Horizontal wall
-            AddWall(new Vector3(width / 2 + x, 0, height / 2 - cageHeight / 2));
-
-            // Vertical walls
-            if (x == -cageWidth / 2 || x == cageWidth / 2)
-            {
-                for (int y = 0; y < cageHeight; y++)
-                {
-                    AddWall(new Vector3(width / 2 + x, 0, height / 2 + y - cageHeight / 2));
-                }
-            }
-
-            // Door
-            if (x < -openingSize / 2 || x > openingSize / 2)
-                AddWall(new Vector3(width / 2 + x, 0, height / 2 + cageHeight - cageHeight / 2));
-
-        }
-    }
-
-    void AddWall(Vector3 pos)
-    {
-        Obstacle o = new Obstacle(pos, 2, 5);
-        AddObstacle(o);
     }
 }

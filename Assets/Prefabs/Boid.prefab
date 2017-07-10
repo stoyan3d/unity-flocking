@@ -38,7 +38,7 @@ GameObject:
   - component: {fileID: 23176879111068690}
   - component: {fileID: 95132788321766354}
   m_Layer: 0
-  m_Name: Boid (1)
+  m_Name: Mesh
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -55,7 +55,7 @@ GameObject:
   - component: {fileID: 198053084534443434}
   - component: {fileID: 199744308860461164}
   m_Layer: 0
-  m_Name: Particle System
+  m_Name: Tail
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -212,12 +212,12 @@ ParticleSystem:
   moveWithTransform: 1
   moveWithCustomTransform: {fileID: 0}
   scalingMode: 1
-  randomSeed: 207135136
+  randomSeed: -360412128
   InitialModule:
     serializedVersion: 3
     enabled: 1
     startLifetime:
-      scalar: 1
+      scalar: 0.7
       maxCurve:
         serializedVersion: 2
         m_Curve:
@@ -388,7 +388,7 @@ ParticleSystem:
       maxColor: {r: 1, g: 1, b: 1, a: 1}
       minMaxState: 0
     startSize:
-      scalar: 2.81
+      scalar: 3
       maxCurve:
         serializedVersion: 2
         m_Curve:
@@ -691,7 +691,7 @@ ParticleSystem:
     enabled: 1
     serializedVersion: 3
     rateOverTime:
-      scalar: 40
+      scalar: 30
       maxCurve:
         serializedVersion: 2
         m_Curve:
@@ -1059,7 +1059,7 @@ ParticleSystem:
         ctime6: 0
         ctime7: 0
         atime0: 0
-        atime1: 42020
+        atime1: 31033
         atime2: 0
         atime3: 0
         atime4: 0
