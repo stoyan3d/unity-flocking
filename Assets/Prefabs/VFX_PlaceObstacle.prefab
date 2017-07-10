@@ -552,7 +552,7 @@ ParticleSystem:
     serializedVersion: 3
     enabled: 1
     type: 3
-    radius: 4
+    radius: 2
     angle: 25
     length: 5
     boxX: 1

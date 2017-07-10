@@ -21,6 +21,7 @@ GameObject:
   - component: {fileID: 4421471520118064}
   - component: {fileID: 33732287913048416}
   - component: {fileID: 23530781428700540}
+  - component: {fileID: 95882917013260256}
   m_Layer: 0
   m_Name: Obstacle
   m_TagString: Untagged
@@ -79,3 +80,20 @@ MeshFilter:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1583094646399678}
   m_Mesh: {fileID: 4300002, guid: 8c047d5adce9c17428ac3196f00093e7, type: 3}
+--- !u!95 &95882917013260256
+Animator:
+  serializedVersion: 3
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1583094646399678}
+  m_Enabled: 1
+  m_Avatar: {fileID: 0}
+  m_Controller: {fileID: 9100000, guid: 78dca49ad8ae9f449964937d6025fee1, type: 2}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1

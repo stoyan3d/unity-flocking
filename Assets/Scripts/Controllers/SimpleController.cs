@@ -28,7 +28,7 @@ public class SimpleController : MonoBehaviour
     public GameObject placeObstacleVFX;
 
     public enum BuildMode { Boid, Obstacle }
-    BuildMode buildMode;
+    public BuildMode buildMode { get; protected set; }
 
     public static SimpleController instance;
 
@@ -43,6 +43,7 @@ public class SimpleController : MonoBehaviour
 
     GameObject boidsGo;
     GameObject obstalcesGo;
+    GameObject vfxGo;
 
     bool initialized = false;
 
@@ -65,6 +66,8 @@ public class SimpleController : MonoBehaviour
         boidsGo.transform.SetParent(transform);
         obstalcesGo = new GameObject("Obstacles");
         obstalcesGo.transform.SetParent(transform);
+        vfxGo = new GameObject("VFX");
+        vfxGo.transform.SetParent(transform);
 
         // Add boids
         for (int i = 0; i < flockSize; i++)
@@ -127,7 +130,7 @@ public class SimpleController : MonoBehaviour
 
             GameObject go;
             go = SimplePool.Spawn(placeVFX, b.position, placeVFX.transform.rotation);
-            go.transform.SetParent(gameObject.transform);
+            go.transform.SetParent(vfxGo.transform);
         }
 
         boidGameObjectMap[b] = Instantiate(boidPrefab);
@@ -144,7 +147,7 @@ public class SimpleController : MonoBehaviour
 
             GameObject go;
             go = SimplePool.Spawn(placeObstacleVFX, o.position, placeObstacleVFX.transform.rotation);
-            go.transform.SetParent(gameObject.transform);
+            go.transform.SetParent(vfxGo.transform);
         }
 
         obstacleGameObjectMap[o] = Instantiate(obstaclePrefab);
