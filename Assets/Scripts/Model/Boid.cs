@@ -223,6 +223,11 @@ public class Boid {
         }
     }
 
+    /// <summary>
+    /// Iterate through our obstacle list and avoid each one. Each obstacle has individual weights.
+    /// </summary>
+    /// <param name="obstacles"></param>
+    /// <returns></returns>
     Vector3 AvoidObstacles(List<Obstacle> obstacles)
     {
         if (obstacles == null)
@@ -234,18 +239,18 @@ public class Boid {
         Vector3 sum = Vector3.zero;
         int count = 0;
 
-        foreach (Obstacle o in obstacles)
+        for (int i = 0; i < obstacles.Count; i++)
         {
-            float dist = Vector3.Distance(position, o.position);
+            float dist = Vector3.Distance(position, obstacles[i].position);
 
             // Check if we are too close
-            if (dist > 0 && dist < o.distance)
+            if (dist > 0 && dist < obstacles[i].distance)
             {
                 // Calculate vector pointing away from neighbour
-                Vector3 diff = position - o.position;
+                Vector3 diff = position - obstacles[i].position;
                 diff.Normalize();
                 diff = diff / dist; // Weight by distance
-                sum += diff * o.weight;
+                sum += diff * obstacles[i].weight;
                 count++;
             }
         }
@@ -266,6 +271,10 @@ public class Boid {
         // Separation
         Vector3 sep = Vector3.zero;
         int sepCount = 0;
+        Vector3 ali = Vector3.zero;
+        int aliCount = 0;
+        Vector3 cohSum = Vector3.zero;
+        int cohCount = 0;
 
         for (int i = 0; i < boids.Count; i++)
         {
@@ -281,15 +290,26 @@ public class Boid {
                 sep += diff;
                 sepCount++;
             }
+
+            if (dist > 0 && dist < SimpleController.instance.alignmentDistance)
+            {
+                ali += boids[i].velocity;
+                aliCount++;
+            }
+
+            if (dist > 0 && dist < SimpleController.instance.cohesionDistance)
+            {
+                cohSum += boids[i].position;
+                cohCount++;
+            }
         }
 
-        // Average
+        // Separation
         if (sepCount > 0)
         {
             sep = sep / sepCount;
         }
 
-        // As long as the vector is greater than 0
         if (sep.magnitude > 0)
         {
             sep.Normalize();
@@ -301,20 +321,6 @@ public class Boid {
         sum += sep * SimpleController.instance.separationWeight; ;
 
         // Alignment
-        Vector3 ali = Vector3.zero;
-        int aliCount = 0;
-
-        for (int i = 0; i < boids.Count; i++)
-        {
-            float dist = Vector3.Distance(position, boids[i].position);
-
-            if (dist > 0 && dist < SimpleController.instance.alignmentDistance)
-            {
-                ali += boids[i].velocity;
-                aliCount++;
-            }
-        }
-
         if (aliCount > 0)
         {
             ali = ali / aliCount;
@@ -330,23 +336,9 @@ public class Boid {
 
 
         // Cohesion
-        Vector3 cohSum = Vector3.zero;
-        int count = 0;
-
-        for (int i = 0; i < boids.Count; i++)
+        if (cohCount > 0)
         {
-            float dist = Vector3.Distance(position, boids[i].position);
-
-            if (dist > 0 && dist < SimpleController.instance.cohesionDistance)
-            {
-                cohSum += boids[i].position;
-                count++;
-            }
-        }
-
-        if (count > 0)
-        {
-            cohSum = cohSum / count;
+            cohSum = cohSum / cohCount;
 
             sum += Seek(cohSum) * SimpleController.instance.cohesionWeight;
         }

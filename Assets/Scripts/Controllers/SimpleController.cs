@@ -55,6 +55,7 @@ public class SimpleController : MonoBehaviour
         else
             instance = this;
 
+        // Initialize our variables
         boids = new List<Boid>();
         obstacles = new List<Obstacle>();
         boidGameObjectMap = new Dictionary<Boid, GameObject>();
