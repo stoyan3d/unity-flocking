@@ -6,4 +6,8 @@ EditorBuildSettings:
   serializedVersion: 2
   m_Scenes:
   - enabled: 1
-    path: Assets/Scenes/Flocking.unity
+    path: Assets/Scenes/Flocking_Start.unity
+    guid: 131605c9430e9554d91f3372442ed981
+  - enabled: 1
+    path: Assets/Scenes/Flocking_Main.unity
+    guid: 4175429d342a6784b876e9dd713c2d63

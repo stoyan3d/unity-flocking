@@ -2,11 +2,12 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.EventSystems;
+using UnityEngine.SceneManagement;
 
 [RequireComponent(typeof(AudioSource))]
 public class SimpleController : MonoBehaviour
 {
-
+    public StartingObstacle[] startingObstacles;
     public int flockSize = 20;
     public float boidSpeed = 10f;
     public GameObject boidPrefab;
@@ -76,8 +77,14 @@ public class SimpleController : MonoBehaviour
             AddBoid(new Boid(Vector3.zero));
         }
 
-        // Add an obstacle
-        AddObstacle(new Obstacle(new Vector3(width/2, 0, height/2)));
+        // Populate the map with some initial obstacles
+        if (startingObstacles != null)
+        {
+            foreach (StartingObstacle obs in startingObstacles)
+            {
+                AddObstacle(new Obstacle(new Vector3(obs.x, 0, obs.y)));
+            }
+        }
 
         initialized = true;
     }
@@ -172,6 +179,11 @@ public class SimpleController : MonoBehaviour
         buildMode = BuildMode.Obstacle;
     }
 
+    public void Restart()
+    {
+        SceneManager.LoadScene(1);
+    }
+
     private Vector3 GetGroundPosFromScreen(Vector3 screenPos)
     {
         var ray = Camera.main.ScreenPointToRay(screenPos);
@@ -180,4 +192,11 @@ public class SimpleController : MonoBehaviour
         groundPlane.Raycast(ray, out d);
         return ray.GetPoint(d);
     }
+}
+
+[System.Serializable]
+public struct StartingObstacle
+{
+    public float x;
+    public float y;
 }
